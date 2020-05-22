@@ -1,26 +1,25 @@
-import { ConsumeMessage } from "amqplib";
-import { rabbitMQ } from '../rabbitmq/index';
-
-function consumer(queue) {
-    return function decorator(t, n, descriptor) {
-        setTimeout(() => { rabbitMQ.consumeQueue(queue, descriptor.value); }, 1000);
-        return descriptor;
-    }
-}
+import { messenger } from '../messengers/index';
+import { ConsumeMessage } from 'amqplib';
+import { consumerMessage, logger } from '../decorators'
 
 export class ProductController {
 
-    @consumer("product_send_erp_q")
+    @consumerMessage("test_product_send_erp_q")
     async sendProductErp(msg: ConsumeMessage) {
-        console.log(msg.content.toString());
+        console.log('test_product_send_erp_q:: ' + msg.content.toString());
     }
 
-    @consumer("product_update_q")
+    @consumerMessage("test_product_update_q")
     async updateProduct(msg: ConsumeMessage) {
-        console.log(msg.content.toString());
+        console.log('test_product_update_q:: ' + msg.content.toString());
     }
 
+    @logger
     async sendMessage(message: string) {
-        rabbitMQ.sendMessage('new-message', message);
+        messenger.sendMessage('test_product_update_q', message);
+        messenger.sendMessage('test_product_send_erp_q', message);
+        return {
+            name: "teste"
+        };
     }
 }

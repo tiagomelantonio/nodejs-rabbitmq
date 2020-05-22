@@ -2,16 +2,16 @@ import amqp from 'amqplib';
 
 export type ConsumeMessage = (msg: amqp.ConsumeMessage) => any;
 
-let rabbitMQ: RabbitMQ;
+let messenger : Messenger;
 
-export class RabbitMQ {
+export class Messenger {
 
     channel: amqp.Channel;
 
     async connect() {
         await amqp.connect('amqp://localhost').then(async conn => {
             this.channel = await conn.createChannel();
-            console.log(`Connected server`);
+            console.log(`Server amqp is up`);
         });
     }
 
@@ -29,6 +29,6 @@ export class RabbitMQ {
     }
 }
 
-rabbitMQ = new RabbitMQ();
+messenger = new Messenger();
 
-export { rabbitMQ };
+export { messenger };

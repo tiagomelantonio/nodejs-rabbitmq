@@ -1,15 +1,11 @@
-import express from 'express';
-import { rabbitMQ } from './rabbitmq';
+import { messenger } from './messengers';
 import { ProductController } from './controllers/ProductController';
 
-const app = express();
-app.listen(3000);
-
 (async() => {
-    await rabbitMQ.connect();
+    await messenger.connect();
 
-    setTimeout(() => {
+    setInterval(() => {
         new ProductController().sendMessage(`Tiago Melantonio`);
-    }, 5000);
+    }, 2000);
 
 })();
