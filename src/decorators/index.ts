@@ -7,6 +7,20 @@ const consumerMessage = function consumer(queue) {
     }
 }
 
+const consumeExchange = function consumeExchange(exchange, routeKey, queue) {
+    return function decorator(t, n, descriptor) {
+        setTimeout(() => { messenger.consumeExchange(exchange, routeKey, queue, descriptor.value) }, 1000);
+        return descriptor;
+    }
+}
+
+const consumeFanout = function consumeExchange(exchange, queue) {
+    return function decorator(t, n, descriptor) {
+        setTimeout(() => { messenger.consumeFanout(exchange, queue, descriptor.value) }, 1000);
+        return descriptor;
+    }
+}
+
 const logger = function logger(target, name, descriptor) {
     const original = descriptor.value;
 
@@ -15,10 +29,8 @@ const logger = function logger(target, name, descriptor) {
             console.log(`Logger --> Arguments: ${args} - ${new Date()}`);
             try {
                 const result = original.apply(this, args);
-                console.log(`Logger --> Result: ${result} - ${new Date()}`);
                 return result;
             } catch (e) {
-                console.log(`Logger --> Error: ${e} - ${new Date()}`);
                 throw e;
             }
         }
@@ -26,4 +38,4 @@ const logger = function logger(target, name, descriptor) {
     return descriptor;
 }
 
-export { consumerMessage, logger };
+export { consumerMessage, consumeExchange, consumeFanout, logger };
