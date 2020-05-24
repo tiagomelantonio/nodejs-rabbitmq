@@ -14,7 +14,7 @@ import faker from 'faker';
                 age: faker.random.number({ min: 1, max: 100 })
             }
         );
-    }, 3000);
+    }, 300000);
 
     setInterval(() => {
         new ProductController().sendExchange(
@@ -24,7 +24,7 @@ import faker from 'faker';
                 phone: faker.phone.phoneNumberFormat()
             }
         );
-    }, 4000);
+    }, 400000);
 
 
     setInterval(() => {
@@ -35,6 +35,25 @@ import faker from 'faker';
                 company: faker.company.catchPhraseDescriptor()
             }
         );
-    }, 10000);
+    }, 100000);
 
+    setInterval(() => {
+        new ProductController().sendMessageTopic(
+            {
+                name: `${faker.name.findName()} ${faker.name.lastName()}`,
+                age: faker.random.number({ min: 1, max: 100 }),
+                city: faker.address.city()
+            }
+        );
+    }, 500000);
+
+    setInterval(() => {
+        new ProductController().sendMessageRPC(
+            {
+                id: '123456',
+                name: `${faker.name.findName()} ${faker.name.lastName()}`,
+                age: faker.random.number({ min: 1, max: 100 })
+            }
+        );
+    }, 2000);
 })();

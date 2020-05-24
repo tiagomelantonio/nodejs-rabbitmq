@@ -7,16 +7,30 @@ const consumerMessage = function consumer(queue) {
     }
 }
 
-const consumeExchange = function consumeExchange(exchange, routeKey, queue) {
+const consumerMessageRPC = function consumerMessageRPC(queue) {
+    return function decorator(t, n, descriptor) {
+        setTimeout(() => { messenger.consumeQueue(queue, descriptor.value); }, 1000);
+        return descriptor;
+    }
+}
+
+const consumerExchange = function consumerExchange(exchange, routeKey, queue) {
     return function decorator(t, n, descriptor) {
         setTimeout(() => { messenger.consumeExchange(exchange, routeKey, queue, descriptor.value) }, 1000);
         return descriptor;
     }
 }
 
-const consumeFanout = function consumeExchange(exchange, queue) {
+const consumerFanout = function consumerFanout(exchange, queue) {
     return function decorator(t, n, descriptor) {
         setTimeout(() => { messenger.consumeFanout(exchange, queue, descriptor.value) }, 1000);
+        return descriptor;
+    }
+}
+
+const consumerTopic = function consumerTopic(exchange, pattern, queue) {
+    return function decorator(t, n, descriptor) {
+        setTimeout(() => { messenger.consumeTopic(exchange, pattern, queue, descriptor.value) }, 1000);
         return descriptor;
     }
 }
@@ -38,4 +52,4 @@ const logger = function logger(target, name, descriptor) {
     return descriptor;
 }
 
-export { consumerMessage, consumeExchange, consumeFanout, logger };
+export { consumerMessage, consumerExchange, consumerFanout, consumerTopic, consumerMessageRPC, logger };
